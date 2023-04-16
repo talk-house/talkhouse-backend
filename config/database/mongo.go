@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"talkhouse/helper"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,18 +30,13 @@ func ConnectMongo() {
 
 	// Create a new client and connect to the server
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
-
-	if err != nil {
-		panic(err)
-	}
+	helper.CheckError(err, "New Client connection is failed")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	err = client.Connect(ctx)
-	if err != nil {
-		panic(err)
-	}
+	helper.CheckError(err, "Client Connection failed")
 
 	db := client.Database("talkhouse")
 	MG = MongoInstance{
